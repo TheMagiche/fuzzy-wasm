@@ -1,0 +1,22 @@
+[package]
+name = "fuse-engine"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Fuse.js-compatible fuzzy search engine compiled to WebAssembly"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+# Compiled with `target-feature=+simd128`. The scalar Bitap path is unchanged;
+# SIMD speeds up the UTF-16 indexOf scan used by Bitap and include-match.
+simd = []
+
+[dependencies]
+unicode-normalization = "=0.1.24"
+wasm-bindgen = "=0.2.92"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+js-sys = "=0.3.69"

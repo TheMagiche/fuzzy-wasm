@@ -1,0 +1,13 @@
+{
+  "name": "@fuse-wasm/bench",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bench": "tsx src/run.ts"
+  },
+  "devDependencies": {
+    "fuse.js": "7.5.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

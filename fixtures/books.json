@@ -1,0 +1,14 @@
+[
+  {
+    "title": "The Old Man and the Sea",
+    "author": { "firstName": "Ernest", "lastName": "Hemingway" }
+  },
+  {
+    "title": "Old Man's War",
+    "author": { "firstName": "John", "lastName": "Scalzi" }
+  },
+  {
+    "title": "The Young Man",
+    "author": { "firstName": "Ann", "lastName": "Young" }
+  }
+]

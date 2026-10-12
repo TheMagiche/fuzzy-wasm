@@ -1,0 +1,13 @@
+node_modules
+dist
+target
+pkg
+pkg-simd
+uploads
+agent-tools
+.DS_Store
+*.local
+.turbo
+coverage
+.vite
+*.tsbuildinfo

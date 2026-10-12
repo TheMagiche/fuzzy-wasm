@@ -1,0 +1,66 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  rust:
+    name: fmt, clippy, cargo test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test
+
+  wasm:
+    name: wasm-pack and size
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - name: Non-SIMD build
+        run: wasm-pack build crates/fuse-engine --target web --out-dir ../../packages/fuse-wasm/pkg --release
+      - name: SIMD build
+        run: RUSTFLAGS="-C target-feature=+simd128" wasm-pack build crates/fuse-engine --target web --out-dir ../../packages/fuse-wasm/pkg-simd --release --features simd
+      - name: Gzip size
+        run: |
+          set -euo pipefail
+          size=$(gzip -c packages/fuse-wasm/pkg/fuse_engine_bg.wasm | wc -c)
+          simd=$(gzip -c packages/fuse-wasm/pkg-simd/fuse_engine_bg.wasm | wc -c)
+          echo "wasm gzip bytes: $size"
+          echo "simd wasm gzip bytes: $simd"
+          echo "wasm_gzip_bytes=$size" >> "$GITHUB_STEP_SUMMARY"
+          echo "simd_wasm_gzip_bytes=$simd" >> "$GITHUB_STEP_SUMMARY"
+          test "$size" -lt 61440
+          test "$simd" -lt 61440
+
+  js:
+    name: vitest differential
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build:wasm
+      - run: pnpm --filter fuse-wasm test
+      - run: pnpm --filter fuse-wasm typecheck

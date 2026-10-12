@@ -1,0 +1,20 @@
+{
+  "name": "fuse-wasm-workspace",
+  "private": true,
+  "packageManager": "pnpm@10.33.4",
+  "scripts": {
+    "build:wasm": "wasm-pack build crates/fuse-engine --target web --out-dir ../../packages/fuse-wasm/pkg --release",
+    "build:wasm:simd": "RUSTFLAGS='-C target-feature=+simd128' wasm-pack build crates/fuse-engine --target web --out-dir ../../packages/fuse-wasm/pkg-simd --release --features simd",
+    "build": "pnpm build:wasm && pnpm --filter fuse-wasm build",
+    "test": "pnpm build:wasm && cargo test --offline && pnpm --filter fuse-wasm test",
+    "bench": "pnpm --filter @fuse-wasm/bench bench",
+    "dev": "pnpm --filter react-demo dev",
+    "size": "gzip -c packages/fuse-wasm/pkg/fuse_engine_bg.wasm | wc -c"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.11"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}

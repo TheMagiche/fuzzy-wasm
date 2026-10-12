@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Source Sans 3', 'Avenir Next', 'Segoe UI', sans-serif;
+  --color-paper: #f3ecdf;
+  --color-ink: #1c1612;
+  --color-stamp: #8f2d2d;
+  --color-rule: #d9cbb6;
+  --color-card: #fffaf3;
+  --color-background: #f3ecdf;
+  --color-foreground: #1c1612;
+  --color-primary: #8f2d2d;
+  --color-primary-foreground: #fffaf3;
+  --color-border: #d9cbb6;
+  --color-input: #e7dccb;
+  --color-ring: #8f2d2d;
+  --color-muted: #e7dccb;
+  --color-muted-foreground: #5e534a;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 12% -10%, rgba(143, 45, 45, 0.08), transparent 36%),
+    var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: #8f2d2d;
+  color: #fffaf3;
+}
