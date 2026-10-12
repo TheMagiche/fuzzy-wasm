@@ -60,10 +60,14 @@ export class FuseWorker<T> {
       return
     }
     this.fuse = createHeadless(docs, options)
-    const scriptUrl = workerOptions.workerUrl
-      ? workerScriptUrl(workerOptions.workerUrl)
-      : new URL('./worker.ts', import.meta.url)
-    this.worker = new WorkerCtor!(scriptUrl, { type: 'module' })
+    if (workerOptions.workerUrl) {
+      this.worker = new WorkerCtor!(workerScriptUrl(workerOptions.workerUrl), { type: 'module' })
+    } else {
+      // Keep this call in the `new Worker(new URL(...))` form. Vite only
+      // bundles a module worker when the URL is an inline argument. The
+      // package build rewrites the `.ts` specifier to `./worker.js`.
+      this.worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' })
+    }
     this.worker.onmessage = (event: MessageEvent<{ id: number; error?: string; buf?: Uint8Array }>) => {
       const pending = this.pending.get(event.data.id)
       if (!pending) return

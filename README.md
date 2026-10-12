@@ -13,7 +13,7 @@ pnpm --filter fuse-wasm test
 pnpm dev
 ```
 
-`pnpm dev` starts the card-catalog demo at <http://127.0.0.1:43123>. It indexes 100,000 generated books in a worker and can time the same query with Fuse.js on the main thread.
+`pnpm dev` starts the card-catalog demo at <http://127.0.0.1:43123>. The same demo is published at <https://themagiche.github.io/fuzzy-wasm/>. It indexes 100,000 generated books in a worker and can time the same query with Fuse.js on the main thread.
 
 ```bash
 pnpm test          # wasm build, cargo test, vitest differential suite

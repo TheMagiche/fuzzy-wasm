@@ -5,7 +5,16 @@ import { defineConfig } from 'vite'
 
 const fuseSrc = path.resolve(__dirname, '../../packages/fuse-wasm/src')
 
+/** Project-site prefix, e.g. `/fuzzy-wasm/`. Local dev stays at `/`. */
+function siteBase(): string {
+  const raw = process.env.VITE_BASE?.trim()
+  if (!raw || raw === '/') return '/'
+  const prefixed = raw.startsWith('/') ? raw : `/${raw}`
+  return prefixed.endsWith('/') ? prefixed : `${prefixed}/`
+}
+
 export default defineConfig({
+  base: siteBase(),
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: [

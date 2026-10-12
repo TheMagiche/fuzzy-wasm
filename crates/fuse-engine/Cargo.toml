@@ -18,5 +18,10 @@ simd = []
 unicode-normalization = "=0.1.24"
 wasm-bindgen = "=0.2.92"
 
+# wasm-pack 0.13 ships Binaryen 117, which rejects the bulk-memory and
+# saturating-truncation ops that current rustc emits unless they are enabled.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-O", "--enable-bulk-memory", "--enable-nontrapping-float-to-int", "--enable-simd"]
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 js-sys = "=0.3.69"
