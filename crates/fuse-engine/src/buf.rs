@@ -48,8 +48,8 @@ impl<'a> Reader<'a> {
         let len = self.u32()? as usize;
         let bytes = self.take(len.checked_mul(2).ok_or("utf16 length overflow")?)?;
         let mut units = Vec::with_capacity(len);
-        for chunk in bytes.chunks_exact(2) {
-            units.push(u16::from_le_bytes([chunk[0], chunk[1]]));
+        for chunk in bytes.as_chunks::<2>().0 {
+            units.push(u16::from_le_bytes(*chunk));
         }
         Ok(units)
     }
